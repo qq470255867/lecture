@@ -45,6 +45,7 @@ public class UserController {
     public WebResult getUserWithStatus(@PathVariable("clazzId") long clazzId) {
 
         try {
+
             return WebResult.SUCCESS(userService.getUserWithStatus(clazzId));
         }catch (Exception e) {
             log.error(e.getMessage(),e);

@@ -7,6 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/lec")
 @Slf4j
@@ -20,7 +25,11 @@ public class LectureController {
     public WebResult getLectures(){
 
         try {
-            return WebResult.SUCCESS(lectureService.getLectures());
+            List<Lecture> lectures = lectureService.getLectures();
+            for (Lecture lecture : lectures) {
+                lecture.setDate(lecture.getDate().split(" ")[0]);
+            }
+            return WebResult.SUCCESS(lectures);
         }catch (Exception e){
 
             log.error(e.getMessage(),e);

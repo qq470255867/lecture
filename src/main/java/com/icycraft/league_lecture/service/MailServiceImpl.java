@@ -29,8 +29,6 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Value("${spring.mail.to}")
-    private String to;
 
     /**
      * 发送带附件的邮件

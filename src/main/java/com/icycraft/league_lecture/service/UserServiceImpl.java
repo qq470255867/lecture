@@ -3,8 +3,10 @@ package com.icycraft.league_lecture.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.icycraft.league_lecture.dao.*;
+import com.icycraft.league_lecture.entity.Location;
 import com.icycraft.league_lecture.entity.User;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.icycraft.league_lecture.util.IpUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService{
-
 
 
     @Autowired
@@ -41,22 +43,43 @@ public class UserServiceImpl implements UserService{
     @Value("${app.secret}")
     private String appSecret;
 
-
     @Autowired
     RecordDao recordDao;
 
 
+    @Autowired
+    LocationService locationService;
+
     @Override
-    public User getUerByOpenId(String openId) {
+    public User getUerByOpenId(String openId,String ip) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("wx_id",openId);
         User user = userDao.selectOne(userQueryWrapper);
 
         if (user==null){
-            //首次登录
+
             User newUser = new User();
+            //首次登录
             newUser.setWxId(openId);
-            userDao.insert(newUser);
+            newUser.setIp(ip);
+            try {
+
+                Location location = IpUtil.getLocationByIp(ip);
+
+                newUser.setAddress(location.getAddress());
+
+                String lo = locationService.convertAddress(location.getLon(), location.getLat());
+
+                newUser.setLocation(lo);
+
+
+            }catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }finally {
+
+                userDao.insert(newUser);
+            }
+
             return userDao.selectOne(userQueryWrapper);
         }else {
             return user;

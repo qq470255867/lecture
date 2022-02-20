@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lec")
@@ -59,4 +56,6 @@ public class LectureController {
             return WebResult.ERROR(e.getMessage());
         }
     }
+
+
 }

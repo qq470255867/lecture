@@ -25,5 +25,9 @@ public class User {
 
     private String wxId;
 
+    private String ip;
 
+    private String address;
+
+    private String location;
 }

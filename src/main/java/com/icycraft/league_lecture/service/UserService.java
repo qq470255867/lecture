@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
 
 
-    User getUerByOpenId(String openId);
+    User getUerByOpenId(String openId,String ip);
 
     String getOpenId(String code) throws Exception;
 

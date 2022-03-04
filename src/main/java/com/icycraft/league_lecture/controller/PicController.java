@@ -6,12 +6,16 @@ import com.icycraft.league_lecture.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.PushBuilder;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 @RestController
@@ -66,6 +70,7 @@ public class PicController {
                 file.transferTo(dest);
             }
             if (imageName.equals("img3")){
+
                 filePath = filePath+File.separator+user.getName()+"信息页.jpg";
                 File dest = new File(filePath);
                 file.transferTo(dest);
@@ -123,10 +128,35 @@ public class PicController {
         }
     }
 
+    @GetMapping("/delete/{userId}")
+    @Transactional
+    public WebResult deleteFile(@PathVariable("userId") long userId){
+        try {
+
+            User user = userService.getUser(userId);
+
+            Lecture lastLecture = lectureService.getLastLecture();
+
+            Clazz clazz = clazzService.getClazz(user.getClazzId());
+
+            String path =  fileUploadPath+File.separator+lastLecture.getName()+File.separator+clazz.getName()+File.separator+user.getName();
+
+            FileUtils.deleteFile(new File(path));
+
+            recordService.deleteLastRecordByUserId(userId);
+
+            return WebResult.SUCCESS(null);
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            return WebResult.ERROR(e.getMessage());
+        }
+    }
+
 
     @GetMapping("/download/{userId}")
     public byte[] download(@PathVariable("userId") long userId, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        System.out.println("下载");
+
 
 
         User user = userService.getUser(userId);

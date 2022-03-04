@@ -30,7 +30,8 @@ public class ClazzController {
     @GetMapping ("/get/{id}")
     public WebResult getClazz(@PathVariable long id){
         try {
-            return WebResult.SUCCESS(clazzService.getClazz(id));
+            Clazz clazz = clazzService.getClazz(id);
+            return WebResult.SUCCESS(clazz);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             return WebResult.ERROR(e.getMessage());

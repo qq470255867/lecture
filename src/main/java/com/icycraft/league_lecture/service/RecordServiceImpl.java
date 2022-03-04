@@ -53,4 +53,9 @@ public class RecordServiceImpl implements RecordService{
 
         return recordDao.getSubmited(clazzId);
     }
+
+    @Override
+    public void deleteLastRecordByUserId(long userId) {
+        recordDao.deleteLastRecordByUserId(userId);
+    }
 }

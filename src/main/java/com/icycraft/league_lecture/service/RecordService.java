@@ -16,4 +16,6 @@ public interface RecordService {
 
     List<User> getSubmitedList(long clazzId);
 
+    void deleteLastRecordByUserId(long userId);
+
 }

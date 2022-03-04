@@ -2,7 +2,9 @@ package com.icycraft.league_lecture.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.icycraft.league_lecture.dao.ClazzDao;
+import com.icycraft.league_lecture.dao.UserDao;
 import com.icycraft.league_lecture.entity.Clazz;
+import com.icycraft.league_lecture.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,21 @@ public class ClazzServiceImpl implements ClazzService{
     ClazzDao clazzDao;
 
 
+    @Autowired
+    UserDao userDao;
+
     @Override
     public Clazz getClazz(long id) {
-        return clazzDao.selectById(id);
+
+        Clazz clazz = clazzDao.selectById(id);
+        QueryWrapper<User> uqw = new QueryWrapper<>();
+        uqw.eq("clazz_id", clazz.getId());
+
+        Integer uqwCount = userDao.selectCount(uqw);
+
+        clazz.setRealPnum(uqwCount);
+
+        return clazz;
     }
 
     @Override

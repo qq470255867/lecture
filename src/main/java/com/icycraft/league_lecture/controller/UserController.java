@@ -27,6 +27,18 @@ public class UserController {
         }
 
     }
+    @GetMapping("/catch/egg/{id}")
+    public WebResult catchEgg(@PathVariable("id") long id) {
+        try {
+            User user = userService.getUser(id);
+            user.setCatchEgg(1);
+
+            return WebResult.SUCCESS(userService.updateUser(user));
+        }catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return WebResult.ERROR(e.getMessage());
+        }
+    }
 
 
     @GetMapping("/get/{id}")

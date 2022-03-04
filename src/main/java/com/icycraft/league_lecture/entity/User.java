@@ -30,4 +30,7 @@ public class User {
     private String address;
 
     private String location;
+
+    private int catchEgg;
+
 }

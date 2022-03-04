@@ -3,6 +3,7 @@ package com.icycraft.league_lecture.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.icycraft.league_lecture.entity.Record;
 import com.icycraft.league_lecture.entity.User;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -32,6 +33,21 @@ public interface RecordDao extends BaseMapper<Record> {
             "\tLIMIT 1)\n" +
             "\tand user_id = #{userId}")
     Record getLastRecordByUserId(@Param("userId") Long userId);
+
+    @Delete("Delete\n" +
+            "FROM\n" +
+            "\trecord \n" +
+            "WHERE\n" +
+            "\tlec_id = (\n" +
+            "\tSELECT\n" +
+            "\t\tid \n" +
+            "\tFROM\n" +
+            "\t\tlecture \n" +
+            "\tORDER BY\n" +
+            "\tdate DESC \n" +
+            "\tLIMIT 1)\n" +
+            "\tand user_id = #{userId}")
+    void deleteLastRecordByUserId(@Param("userId") Long userId);
 
     @Select("SELECT\n" +
             "\ta.* \n" +

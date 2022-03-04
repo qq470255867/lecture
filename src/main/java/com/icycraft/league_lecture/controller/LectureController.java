@@ -5,8 +5,10 @@ import com.icycraft.league_lecture.entity.WebResult;
 import com.icycraft.league_lecture.service.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -50,6 +52,8 @@ public class LectureController {
 
         try {
             return WebResult.SUCCESS(lectureService.addLectures(lecture));
+        }catch (DuplicateKeyException e){
+            return WebResult.ERROR("已存在相同名称的课程");
         }catch (Exception e){
 
             log.error(e.getMessage(),e);

@@ -64,13 +64,13 @@ public class UserServiceImpl implements UserService{
             newUser.setIp(ip);
             try {
 
-                Location location = IpUtil.getLocationByIp(ip);
-
-                newUser.setAddress(location.getAddress());
-
-                String lo = locationService.convertAddress(location.getLon(), location.getLat());
-
-                newUser.setLocation(lo);
+//                Location location = IpUtil.getLocationByIp(ip);
+//
+//                newUser.setAddress(location.getAddress());
+//
+//                String lo = locationService.convertAddress(location.getLon(), location.getLat());
+//
+//                newUser.setLocation(lo);
 
 
             }catch (Exception e) {
@@ -93,13 +93,15 @@ public class UserServiceImpl implements UserService{
 
         String url ="https://api.weixin.qq.com/sns/jscode2session?appid="+appId+"&secret="+appSecret+"&js_code="+code+"&grant_type=authorization_code";
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
-
         JSONObject body = JSONObject.parseObject(entity.getBody());
-        assert body != null;
-        if (StringUtils.isEmpty(body.getString("openid"))){
+        log.info(body.toJSONString());
+        String openid = body.getString("openid");
+
+        if (openid==null||openid.equals("")){
             throw new Exception("调用登录接口失败");
         }else {
             return body.getString("openid");
+
         }
     }
 
@@ -117,7 +119,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<JSONObject> getUserWithStatus(long clazzId) {
-
 
         List<User> usersInOneClazz = userDao.selectList(new QueryWrapper<User>().eq("clazz_id", clazzId));
 

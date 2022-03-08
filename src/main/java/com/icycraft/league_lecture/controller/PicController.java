@@ -4,6 +4,7 @@ import com.icycraft.league_lecture.entity.*;
 import com.icycraft.league_lecture.service.*;
 import com.icycraft.league_lecture.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,10 @@ public class PicController {
 
             User user = userService.getUser(userId);
 
+            if (user.getName()==null||"".equals(user.getName())){
+                return WebResult.ERROR("检测到姓名为空，请重新编辑资料");
+            }
+
             Lecture lastLecture = lectureService.getLastLecture();
 
             Clazz clazz = clazzService.getClazz(user.getClazzId());
@@ -55,6 +60,7 @@ public class PicController {
             String filePath = fileUploadPath+File.separator+lastLecture.getName()+File.separator+clazz.getName()+File.separator+user.getName();
 
             judeDirExists(new File(fileUploadPath+File.separator+lastLecture.getName()));
+
             judeDirExists(new File(fileUploadPath+File.separator+lastLecture.getName()+File.separator+clazz.getName()));
 
             judeDirExists(new File(filePath));
@@ -89,13 +95,13 @@ public class PicController {
             }
 
 
-
             return WebResult.SUCCESS(imageName);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return WebResult.ERROR(e.getMessage());
 
+            log.error(e.getMessage(), e);
+
+            return WebResult.ERROR(e.getMessage());
 
         }
 
@@ -158,23 +164,22 @@ public class PicController {
     public byte[] download(@PathVariable("userId") long userId, HttpServletRequest request, HttpServletResponse response) throws Exception{
 
 
-
         User user = userService.getUser(userId);
 
         Lecture lastLecture = lectureService.getLastLecture();
 
         Clazz clazz = clazzService.getClazz(user.getClazzId());
 
-
         ArrayList<String> list = new ArrayList<>();
 
-        list.add(fileUploadPath+File.separator+lastLecture.getName()+File.separator+clazz.getName());
+        list.add(fileUploadPath+File.separator+lastLecture.getName()+File.separator+clazz.getName()+File.separator+user.getName());
 
-        String zipPath =  FileUtils.downloadAllAttachment(clazz.getName(),list,fileUploadPath,request,response);
+        String zipPath =  FileUtils.downloadAllAttachment(user.getName()+lastLecture.getName(),list,fileUploadPath,request,response);
 
         File file = new File(zipPath);
+
         // 获取文件名
-        String filename = file.getName().toString();
+        String filename = file.getName();
         //通过流把文件内容写入到客户端
         InputStream fis = new BufferedInputStream(new FileInputStream(zipPath));
         byte[] buffer = new byte[fis.available()];

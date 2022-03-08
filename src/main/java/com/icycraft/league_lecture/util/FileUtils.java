@@ -81,7 +81,7 @@ public class FileUtils {
     public static String downLoadFiles(String name,List<File> files,String filePath ,HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             //这里的文件你可以自定义是.rar还是.zip
-            filePath = filePath+name+"青年大学习截图.zip";
+            filePath = filePath + name + "截图.zip";
             File file = new File(filePath);
             if (!file.exists()){
                 file.createNewFile();

@@ -38,6 +38,7 @@ public class LoginController {
 
             String ip = IpUtil.getIpAddr(httpServletRequest);
             User user = userService.getUerByOpenId(openId,ip);
+            log.info(user.getName()+"已登录");
             return WebResult.SUCCESS(user);
         }catch (Exception e){
             log.error(e.getMessage(),e);

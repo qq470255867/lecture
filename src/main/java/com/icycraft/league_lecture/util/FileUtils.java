@@ -90,6 +90,7 @@ public class FileUtils {
                 file.delete();
             }
             response.reset();
+
             //创建文件输出流
             FileOutputStream fous = new FileOutputStream(file);
             /**打包的方法用到ZipOutputStream这样一个输出流,所以这里把输出流转换一下*/

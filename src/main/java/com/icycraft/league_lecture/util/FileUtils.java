@@ -89,6 +89,7 @@ public class FileUtils {
                 //如果压缩包已经存在则删除后重新打包压缩
                 file.delete();
             }
+
             response.reset();
 
             //创建文件输出流

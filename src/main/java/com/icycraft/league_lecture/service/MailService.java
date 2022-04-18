@@ -17,5 +17,7 @@ public interface MailService {
      * @param filePath
      */
     void sendAttachmentsMail(String mail,String subject,String content,String filePath);
+
+    void sendMail(String mail,String subject,String content);
  
 }

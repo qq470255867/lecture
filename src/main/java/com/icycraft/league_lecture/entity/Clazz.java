@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class Clazz {
 
-    @TableId(type = IdType.AUTO)
+    @TableId()
     private long id;
 
     private String name;

@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService{
             //首次登录
             newUser.setWxId(openId);
             newUser.setIp(ip);
+            newUser.setClazzId(-1);
             try {
 
 //                Location location = IpUtil.getLocationByIp(ip);

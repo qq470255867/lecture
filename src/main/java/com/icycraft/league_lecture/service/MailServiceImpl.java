@@ -25,7 +25,6 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
 
-
     @Value("${spring.mail.username}")
     private String from;
 
@@ -55,6 +54,23 @@ public class MailServiceImpl implements MailService {
         }
 
     }
- 
- 
+
+    @Override
+    public void sendMail(String mail, String subject, String content) {
+        MimeMessage message=mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper=new MimeMessageHelper(message,true);
+            helper.setFrom(from);
+            helper.setTo(mail);
+            helper.setSubject(subject);
+            helper.setText(content);
+            mailSender.send(message);
+            System.out.println("邮件发送成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("邮件失败");
+        }
+    }
+
+
 }
